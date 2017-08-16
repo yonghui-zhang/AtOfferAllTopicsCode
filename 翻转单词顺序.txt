@@ -1,0 +1,56 @@
+#include<stdio.h>
+#include<string.h>
+/****翻转单词顺序***/
+/*
+* 翻转字符串部分
+*/
+void getOverturnString(char string[], int start, int end)
+{
+   while(start < end)
+   {
+       /****交换字母顺序****/
+	   char temp = string[start];
+	   string[start] = string[end];
+	   string[end] = temp;
+	   start++;
+	   end--;
+   }
+}
+/*
+* 翻转单词顺序
+*/
+void getOverturnWords(char string[])
+{
+	if(string == NULL)
+	{
+       return ;
+	}
+	int length = strlen(string);
+	if(length <= 0)
+	{
+       return ;
+	}
+    /****先整体翻转*****/
+	getOverturnString(string, 0, length-1);//全部翻转
+	/********根据空格部分翻转*******/
+	int start = 0;
+	int end = 0;
+	while(end < length)
+	{
+		/**当遇到空格时，进行翻转**/
+		if(string[end] == ' ')
+		{
+            getOverturnString(string, start, end-1);
+			start = end+1;
+		}
+		end++;
+	}
+	/*******最后部分的翻转*****/
+	getOverturnString(string, start, end-1);
+}
+int main()
+{
+	char str[] = "I am a student.";
+    getOverturnWords(str);
+	printf("%s\n", str);
+}

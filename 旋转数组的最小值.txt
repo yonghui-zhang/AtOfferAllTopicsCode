@@ -1,0 +1,71 @@
+#include<stdio.h>
+/**旋转数组的最小数字**/
+//int num[] = {3, 4, 5, 1, 2};
+//int num[] = {1, 0, 1, 1, 1};
+//int num[] = {1, 1, 1, 0, 1};
+int num[] = {1, 2, 3, 4, 5};
+int length = 5;
+int minflag = -1;
+/* 
+*  寻找最小值
+*/
+void findMinNum(int start, int end)
+{
+	/*********递归进行的条件*******/
+	if(start < end)
+	{
+		/****旋转数组就是本身***/
+	    if(num[start] < num[end])
+		{
+             minflag = start;
+			 return ;
+		}
+       /******递归结束条件*****/
+       if(start == end - 1)
+	   {
+		    minflag = end;
+            return ;
+	   }
+       int mid = (start + end) / 2;
+	   /********应对特殊情况************/
+	   if(num[mid] == num[start] && num[mid] == num[end])
+	   {
+           /*****顺序查找*****/
+		   int result = start;
+		   for(int i=start+1;i<=end;i++)
+		   {
+                if(num[result] > num[i])
+				{
+                    result = i;
+				}
+		   }
+		   minflag = result;
+		   return ;
+	   }
+	   if(num[mid] >= num[start])
+	   {
+           /**此时mid位于旋转数组的左边部分**/
+		   start = mid;
+	   }
+	   if(num[mid] <= num[end])
+	   {
+           /**此时mid位于旋转数组的右边部分**/
+		   end = mid;//这个时候mid有可能就是那个最小值
+	   }
+	   findMinNum(start, end);  
+	} 
+}
+
+int main()
+{
+   int start = 0;
+   int end = length-1;
+   findMinNum(start, end);
+   int min = -1;
+   printf("旋转数组的最小值位置是: %d\n", minflag);
+   if(minflag != -1)
+   {
+       min = num[minflag];
+   }
+   printf("旋转数组的最小值是: %d\n", min);
+}

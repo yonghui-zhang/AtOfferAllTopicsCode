@@ -1,0 +1,42 @@
+#include<stdio.h>
+/****正方体8个顶点放数字*****/
+int sum = 0;
+/*
+* 全排列算法
+*/
+void printNumList(int num[], int current)
+{
+	if(current >= 8)
+	{
+		/*****判断当前的数字组合是否满足条件******/
+		if(((num[0]+num[1]+num[2]+num[3]) == (num[4]+num[5]+num[6]+num[7]))
+			&& ((num[0]+num[2]+num[4]+num[6]) == (num[1]+num[3]+num[5]+num[7]))
+			&& ((num[0]+num[1]+num[4]+num[5]) == (num[2]+num[3]+num[6]+num[7])))
+		{
+			sum++;
+            for(int i=0;i<8;i++)
+			{
+               printf("%d ", num[i]);
+			}
+			printf("\n");
+		}
+		return ;
+	}
+	for(int i=current;i<8;i++)
+	{
+		/*****交换字符*****/
+		int number = num[current];
+        num[current] = num[i];
+		num[i] = number;
+        printNumList(num, current+1);
+		/*****复原字符*****/
+		num[i] = num[current];
+		num[current] = number;
+	}
+}
+int main()
+{
+   int num[8] = {1, 2, 3, 4, 5, 6, 7, 8};
+   printNumList(num, 0);
+   printf("共%d种方案!\n", sum);
+}

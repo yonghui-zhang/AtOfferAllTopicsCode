@@ -1,0 +1,53 @@
+#include<stdio.h>
+/*计算二进制中1的个数*/
+/*
+* 与1做与操作，然后把input右移一位
+*/
+int getNum(int input)
+{
+   int count = 0;
+   while(input)
+   {
+       if(input & 1)
+	   {
+           count++;
+	   }
+	   input = input >> 1; 
+   }
+   return count;
+}
+/*
+* 最开始与1做与操作，input不变，让1左移一位
+*/
+int getNum2(int input)
+{
+    int count = 0;
+	int flag = 1;
+	while(flag)
+	{
+        if(input & flag)
+		{
+            count++;
+		}
+		flag = flag << 1;
+	}
+	return count;
+}
+/*
+* 做减一操作，然后与原数进行与操作
+*/
+int getNum3(int input)
+{
+   int count = 0; 
+   while(input)
+   {
+       input = (input-1) & input;
+	   count++;
+   }
+   return count;
+}
+int main()
+{
+  int count = getNum3(3);
+  printf("%d \n", count);
+}

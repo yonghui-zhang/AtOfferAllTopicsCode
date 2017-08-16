@@ -1,0 +1,104 @@
+#include<stdio.h>
+#include<stdlib.h>
+/***不用加减乘除做加法***/
+/*
+* 加法运算
+*/
+int add(int num1, int num2)
+{
+	/**x86 Win7 vc++6.0下int为4个字节**/
+    int digit = 0;
+	bool carrybit = false;//是否发生进位
+	int sum = 0;
+	char str[31];//打印二进制
+	while(digit < 32)//第32位为符号位
+	{
+		/********移位操作********/
+		if(digit > 0)
+		{
+	       sum = sum << 1;
+		}
+        
+		int result1 = (num1 >> digit) & 1;
+		int result2 = (num2 >> digit) & 1;
+		/******做异或*******/
+		if(result1 ^ result2)// 0 1 或 1 0
+		{
+			/****设置sum的当前位******/
+			if(!carrybit)//是否发生进位
+			{
+               sum = sum + 1;
+			}
+		}else{
+            if(result1 == 1)// 1 1
+			{
+               if(carrybit)//如果进位
+			   {
+				   sum = sum + 1;
+			   }else{
+                   carrybit = true;
+			   }
+			}else if(result1 == 0){// 0 0 
+               if(carrybit)//如果发生进位
+			   {
+                  sum = sum + 1;
+				  carrybit = false;
+			   }
+			}
+		}
+//      itoa(sum, str, 2);
+//      printf("%s\n", str);
+		digit++;
+	}
+	/*****最后将sum反转*********/
+	digit = 0;
+	int sum2 = 0;
+	while(digit < 32)
+    {
+	   if(digit > 0)
+	   {
+           sum2 = sum2 << 1;
+	       sum = sum >> 1;
+	   }
+
+       sum2 = sum2 + (sum & 1);
+//	   itoa(sum2, str, 2);
+//      printf("%s\n", str);
+	   /********移位操作********/
+	  
+	   digit++;
+	}
+	return sum2;
+}
+/*
+* 加法简洁版
+*/
+int add2(int num1, int num2)
+{
+/*	if(num1 == 0)
+	{
+		return num2;
+	}
+	if(num2 == 0)
+	{
+       return num1;
+	}*/
+    int sum = 0;
+	int carry = 0;//进位
+	while(num2 != 0)
+	{
+        sum = num1 ^ num2;
+		carry = (num1 & num2) << 1;
+
+		num1 = sum;
+		num2 = carry;
+	}
+	return num1;
+}
+int main()
+{
+   int num1 = 0;
+   int num2 = 10;
+   int sum = add2(num1, num2);
+   printf("num1+num2 = %d\n", sum);
+}

@@ -1,0 +1,44 @@
+#include<stdio.h>
+/**和为s的两个数字**/
+void findTwoNumInNumsSumEqualNum(int nums[], int length, int num)
+{
+	if(nums == NULL || length < 2)//鲁棒性
+	{
+         return ;     
+	}
+    int start = 0;
+	int end = length - 1;
+	/*******最小的两个数都比该数大的话，找不到****/
+	if(nums[start]+nums[start+1] > num)
+	{
+		 printf("超出范围!\n");
+         return ;
+	}
+	/*******最大的两个数都比该数小的话，找不到****/
+	if(nums[end-1]+nums[end] < num)
+	{
+		printf("超出范围!\n");
+        return ;
+	}
+	while(start < end)
+	{
+       if(nums[start]+nums[end] > num)
+	   {
+           end--;
+	   }else if(nums[start]+nums[end] < num){
+           start++;
+	   }else{
+		   printf("nums[start] = %d\n", nums[start]);
+		   printf("nums[end] = %d\n", nums[end]);
+		   return ;
+	   }
+	}
+	printf("找不到啊!\n");
+}
+int main()
+{
+	int nums[] = {1, 2, 4, 7, 11, 15};
+	int length = 6;
+	int num = 15;
+    findTwoNumInNumsSumEqualNum(nums, length, num);
+}

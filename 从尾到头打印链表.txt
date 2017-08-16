@@ -1,0 +1,64 @@
+#include<stdio.h>
+#include<malloc.h>
+/******结构体*******/
+typedef struct LNode
+{
+	int data;
+	struct LNode * next;
+}LNode,*LinkList;
+
+LinkList Head;//头结点
+/*
+* 初始化
+*/
+void init()
+{
+  Head = (LinkList)malloc(sizeof(LNode));
+  Head->next = NULL;
+}
+/*
+* 创建链表
+*/
+void createLinkedList()
+{
+	int num;
+	printf("输入链表元素个数: ");
+	scanf("%d", &num);
+	for(int i=0;i<num;i++)
+	{
+        LinkList p = (LinkList)malloc(sizeof(LNode));
+		int data = 0;
+		scanf("%d", &data);
+		p->data = data;
+
+		p->next = Head->next;
+		Head->next = p;
+	}
+	printf("链表创建完成!");
+}
+/*
+* 从尾到头打印链表
+*/
+void printLinkedList(LinkList current)
+{
+   if(current != NULL)
+   {
+      if(current->next != NULL)
+	  {
+          printLinkedList(current->next);
+	  }
+	  printf("%d ", current->data);
+   }
+
+}
+int main()
+{
+   init();//初始化
+   createLinkedList();//创建链表
+   printf("从尾到头打印链表:\n");
+   if(Head->next != NULL)
+   {
+       printLinkedList(Head->next);//从尾到头打印链表
+   }
+   printf("\n");
+}

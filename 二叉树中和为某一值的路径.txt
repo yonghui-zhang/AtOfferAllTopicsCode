@@ -1,0 +1,108 @@
+#include<stdio.h>
+#include<malloc.h>
+/***二叉树中和为某一值的路径***/
+int route[100];//初始为100
+int length = 0;//数组当前元素数
+/***结构体****/
+typedef struct TreeNode
+{
+	int data;
+	struct TreeNode *lchild;
+	struct TreeNode *rchild;
+}TreeNode,*BiTree;
+/*
+* 创造一棵二叉树
+*/
+void createTree(BiTree &T)
+{
+	int ch;
+	scanf("%d",&ch);
+	if(ch == 0)//0为输入结束的条件
+	{
+		T=NULL;
+	}
+	else{
+		T = (BiTree)malloc(sizeof(TreeNode));
+		T->data = ch;
+		createTree(T->lchild);
+		createTree(T->rchild);
+	}
+}
+/*
+* 判断此时的路径的和是否和输入的数相等
+*/
+bool equal(int route[], int length, int input)
+{
+   if(length <= 0 || input <= 0)//鲁棒性
+   {
+	   return false;
+   }
+   int sum = 0;
+   for(int i=0;i<length;i++)
+   { 
+     sum += route[i];
+   }
+
+   if(sum == input)
+   {
+	   return true;
+   }else{
+       return false;
+   }
+}
+/*
+* 打印路径
+*/
+void printRoute(int route[], int length)
+{
+	if(length <= 0)
+	{
+       return ;
+	}
+	printf("一条路径为: ");
+	for(int i=0;i<length;i++)
+	{
+       printf("%d ", route[i]);
+	}
+	printf("\n");
+}
+/*
+* 先根遍历
+*/
+void firstOrder(BiTree &T, int input)
+{
+	if(T)
+	{
+	//	printf("%d ", T->data);
+		if(length < 100)
+		{
+			route[length] = T->data;
+		    length++;
+		}else{
+			printf("数组空间已满!\n");
+            return ;
+		}
+		if(T->lchild == NULL && T->rchild == NULL)//叶子结点
+		{
+           /**判断此时的路径的和是否和输入的数相等****/
+		   if(equal(route, length, input))
+		   {
+               /****相等就打印输出路径*****/
+			   printRoute(route, length);
+		   }
+		}else{
+            firstOrder(T->lchild, input);//访问左孩子
+			length--;
+		    firstOrder(T->rchild, input);//访问右孩子
+			length--;
+		}
+	}
+}
+int main()
+{
+   BiTree root;
+   printf("创建二叉树: ");
+   createTree(root);
+   printf("二叉树创建完成!\n");
+   firstOrder(root, 22);
+}

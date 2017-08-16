@@ -1,0 +1,86 @@
+#include<stdio.h>
+#include<malloc.h>
+/**链表中倒数第k个结点**/
+typedef struct LNode{
+  int data;
+  struct LNode *next;
+}LNode, *LinkList;
+
+LinkList Head;
+LinkList p1;//先锋指针
+LinkList p2;//领导指针
+/*
+* 初始化链表
+*/
+void initLinkList()
+{
+   Head = (LinkList)malloc(sizeof(LNode));
+   Head->next = NULL;
+   /*****给链表赋值*****/
+   for(int i=0;i<5;i++)
+   {
+       LinkList p = (LinkList)malloc(sizeof(LNode));
+	   p->data = i;
+	   p->next = NULL;
+	 
+	   p->next = Head->next;
+	   Head->next = p;
+   }
+}
+/*
+* 寻找链表的倒数第k个结点
+*/
+void findKthToTail(unsigned int k)
+{     
+	if(!Head || !Head->next)
+	{
+       /**链表不存在或者链表为空均返回**/
+       return ;
+	}
+	if(k == 0)
+	{
+	   /**倒数第0个结点没有意义**/
+       return ;
+	}
+    p1 = Head->next;
+	p2 = Head->next;
+	/**先让先锋指针走k-1步探探路，大人随后就到**/
+	for(unsigned int i=0;i<k-1;i++)
+	{
+	   if(p1->next != NULL )
+	   {
+           p1 = p1->next;   
+	   }else{
+           /**k太大超过链表长度，k大有可能是输入的大，
+		   还有可能是signed的负数转化为unsigned，导致数字剧增**/
+		   return ;
+	   }
+	}
+	while(p1->next != NULL)
+	{
+         p1 = p1->next;
+		 p2 = p2->next;
+	}
+	printf("链表倒数第%d个数是: %d\n", k, p2->data);
+}
+/*
+* 打印链表
+*/
+void printLinkList()
+{
+    LinkList p = Head->next;
+	while(p)
+	{
+       printf("%d ", p->data);
+	   p = p->next;
+	}
+	printf("\n");
+}
+int main()
+{
+  initLinkList();
+  printLinkList();
+  findKthToTail(-1);
+  findKthToTail(0);
+  findKthToTail(3);
+}

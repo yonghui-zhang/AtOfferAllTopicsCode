@@ -1,0 +1,23 @@
+#include<stdio.h>
+/**BCD码表示0-9**/
+unsigned char BCD[5];//定长10位BCD码
+unsigned char ascii[10] = {'0', '1', '2', '3',
+                  '4', '5', '6', '7', 
+				  '8', '9'};//'0'-'9'
+/*
+* 初始化BCD数组
+*/
+void initBCD()
+{
+   for(int i=0;i<10;i+=2)
+   {
+      BCD[i/2] = (ascii[i]<<4) | (ascii[i+1] & 0x0f);
+   }
+   printf("%02x %x %x %x %x\n", BCD[0], BCD[1], BCD[2], BCD[3], BCD[4]);
+}
+int main()
+{
+   initBCD();
+}
+
+

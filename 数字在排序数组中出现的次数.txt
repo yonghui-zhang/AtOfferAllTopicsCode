@@ -1,0 +1,94 @@
+#include<stdio.h>
+#define LEFT 1
+#define RIGHT 2
+/****数字在排序数组中出现的次数***/
+/*
+* 二分查找找到该数字的最左下标和最右下标
+*/
+int getNumFlag(int nums[], int length, int num, int direction)
+{
+   if(nums == NULL || length <= 0)
+   {
+       return -1;
+   }
+   int start = 0;
+   int end = length-1;
+   
+   while(start < end)
+   {
+       int mid = (start+end)/2;
+	   if(nums[mid] > num)
+	   {
+           end = mid;
+	   }else if(nums[mid] < num)
+	   {
+           start = mid;
+	   }else{
+		   if(direction == LEFT)
+		   {
+			   /*******向左找*******/
+		      if(mid == start || nums[mid]>nums[mid-1])
+			  {
+                 return mid;
+			  }
+              end = mid;
+		   }else if(direction == RIGHT){
+               /*******向右找*******/
+              if(mid == end || nums[mid] < nums[mid+1])
+			  {
+                    return mid;
+			  }
+			  start = mid;
+		   }
+	   }
+   }
+}
+/*
+* 检查该数组中是否存在某数字
+*/
+bool checkIfHaveNumInNums(int nums[], int length, int num)
+{
+    if(nums == NULL || length <= 0)
+	{
+       return false;
+	}
+	for(int i=0;i<length;i++)
+	{
+		if(nums[i] == num)
+		{
+          return true;
+		}
+	}
+	return false;
+}
+/*
+* 得到数字在数组中出现的次数
+*/
+int getNumTimesInNums(int nums[], int length, int num)
+{
+	if(nums == NULL || length <= 0)
+	{
+        return -1;
+	}
+	if(!checkIfHaveNumInNums(nums, length, num))
+	{
+        return -2;
+	}
+    int first = getNumFlag(nums, length, num, LEFT);
+	printf("%d\n", first);
+	int last = getNumFlag(nums, length, num, RIGHT);
+	printf("%d\n", last);
+	int times = last - first + 1;
+    return times;
+}
+int main()
+{
+	int nums[] = {1, 2, 3, 3, 3, 3, 4, 5};
+	int length = 8;
+	int num = 3;
+	int times = getNumTimesInNums(nums, length, num);
+	if(times > 0)
+	{
+	    printf("数字%d在数组中出现的次数为: %d\n", num, times);
+	}
+}

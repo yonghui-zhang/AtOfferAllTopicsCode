@@ -1,0 +1,137 @@
+#include<stdio.h>
+#include<malloc.h>
+/****树的子结构****/
+/***结构体****/
+typedef struct TreeNode
+{
+	int data;
+	struct TreeNode *lchild;
+	struct TreeNode *rchild;
+}TreeNode,*BiTree;
+
+BiTree bigTree;
+BiTree smallTree;
+/*
+* 创建一棵树
+*/
+void createTree(BiTree &T)
+{
+    int ch;
+	scanf("%d",&ch);
+	if(ch == 0)//0为输入结束的条件
+	{
+		T=NULL;
+	}
+	else{
+		T = (BiTree)malloc(sizeof(TreeNode));
+		T->data = ch;
+		createTree(T->lchild);
+		createTree(T->rchild);
+	}
+}
+/*
+* 初始化大树
+*/
+void initBigTree()
+{
+   printf("创建大树: ");
+   createTree(bigTree);
+   printf("大树创建完成!\n");
+}
+/*
+* 初始化小树
+*/
+void initSmallTree()
+{
+	printf("创建小树: ");
+    createTree(smallTree);
+    printf("小树创建完成!\n");
+}
+/*
+* 树的子结构验证
+*/
+bool childTreeCheck(BiTree bigTreeNode, BiTree root)
+{
+	 /******当两个树的结点都存在时*******/
+     if(bigTreeNode && root)
+	 {
+		 /******先用值判断是否是这个结点，然后下面去继续检验孩子结点*****/
+         if(bigTreeNode->data == root->data)
+		 {
+            if(childTreeCheck(bigTreeNode->lchild, root->lchild) && 
+			   childTreeCheck(bigTreeNode->rchild, root->rchild))
+            return true;
+		 }else{
+            return false;
+		 }
+	 }else{
+		 if(root == NULL)
+		 {
+			 return true;
+		 }
+		 if(bigTreeNode == NULL)
+		 {
+			 return false;
+		 }
+	 }
+}
+/*
+* 在大树中寻找小树的根结点并进行验证
+*/
+bool findTreeRoot(BiTree bigRoot, BiTree root)
+{
+	if(root == NULL)
+	{
+       printf("要验证的子树为空!");
+	   return false;
+	}
+	/******进行子树的匹配和验证*******/
+	if(bigRoot)
+	{
+		bool ifchild = false;
+		if(bigRoot->data == root->data) 
+		{
+          // return bigRoot;
+			/******进行子树的验证*****/
+			ifchild = childTreeCheck(bigRoot, root);
+		}
+		if(ifchild)//匹配成功
+		{
+			return true;
+		}else{
+		   /*****不成功继续尝试匹配******/
+           bool ifchild2 = findTreeRoot(bigRoot->lchild, root);
+		   if(ifchild2)
+		   {
+              return true;
+		   }else{
+              bool ifchild3 = findTreeRoot(bigRoot->rchild, root);
+			  if(ifchild3)
+			  {
+                  return true;
+			  }else{
+                  return false;
+			  }
+		   }
+		}	
+	}else{
+	   /***找不到和小树根结点一样的结点，匹配失败**/
+       return false;
+	}
+}
+int main()
+{
+  initBigTree();
+  initSmallTree();
+  if(bigTree && smallTree)
+  {
+      bool ifchild = findTreeRoot(bigTree, smallTree);
+	  if(ifchild)
+	  {
+          printf("是子结构\n");
+	  }else{
+          printf("不是子结构\n");
+	  }
+  }
+}
+

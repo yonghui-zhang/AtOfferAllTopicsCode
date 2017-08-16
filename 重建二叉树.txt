@@ -1,0 +1,94 @@
+#include<stdio.h>
+/**重建二叉树**/
+#include<malloc.h>
+/***结构体****/
+typedef struct TreeNode
+{
+	int data;
+	struct TreeNode *lchild;
+	struct TreeNode *rchild;
+}TreeNode,*BiTree;
+
+BiTree root;//树的根节点
+
+/*******先序遍历(先根遍历)的数据********/
+int preRoot[] = {1, 2, 4, 7, 3, 5, 6, 8};
+/*******中序遍历(中根遍历)的数据********/
+int midRoot[] = {4, 7, 2, 1, 5, 3, 8, 6};
+/*
+* 寻找子树的根节点
+*/
+void findTreeRoot(BiTree &root, int preStart, int preEnd, int midStart, int midEnd)
+{
+	   /********递归结束条件，当最后的子树就只有一个结点时****/
+	   if(preStart == preEnd && midStart == midEnd)
+	   {
+			return;
+	   }
+
+	   int leftDis = 0;//左边子树的结点个数
+
+	   /*******在中序遍历中寻找根节点的位置*******/
+       for(int i=midStart;i<=midEnd;i++)
+	   {
+	      if(midRoot[i] == preRoot[preStart])
+		  {
+              break;
+		  }
+	   }
+	   leftDis = i - midStart;//计算左边子树的结点个数
+	   if(leftDis > 0)
+	   {
+		   /*****左边子树的结点不为0时才创建左子树****/
+	//	    printf("%d ", preRoot[preStart+1]);
+		    BiTree lchild = (BiTree)malloc(sizeof(TreeNode));
+			lchild->data = preRoot[preStart+1];
+			lchild->lchild = NULL;
+			lchild->rchild = NULL;
+
+			root->lchild = lchild;
+           /******构建左子树*********/
+	       findTreeRoot(lchild, preStart+1, preStart+leftDis, midStart, i-1);
+	   }
+	   if(leftDis < preEnd - preStart)
+	   {
+            /*****右边子树的结点不为0时才创建右子树****/
+	//	    printf("%d ", preRoot[preStart+leftDis+1]);
+			BiTree rchild = (BiTree)malloc(sizeof(TreeNode));
+			rchild->data = preRoot[preStart+leftDis+1];
+			rchild->lchild = NULL;
+			rchild->rchild = NULL;
+			root->rchild = rchild;
+           /******构建右子树******/
+	       findTreeRoot(rchild, preStart+leftDis+1, preEnd, i+1, midEnd);
+	   }    
+}
+/*
+*  重建二叉树
+*/
+void createTree()
+{
+    root = (BiTree)malloc(sizeof(TreeNode));
+	root->data = preRoot[0];
+	root->lchild = NULL;
+	root->rchild = NULL;
+    findTreeRoot(root, 0, 7, 0, 7);
+}
+/*
+* 前序遍历进行验证
+*/
+void print(BiTree &root)
+{
+   if(root)
+   {
+       printf("%d ", root->data);
+	   print(root->lchild);
+	   print(root->rchild);
+   } 
+}
+int main()
+{
+   createTree();//重建二叉树
+   printf("前序遍历\n");
+   print(root);
+}

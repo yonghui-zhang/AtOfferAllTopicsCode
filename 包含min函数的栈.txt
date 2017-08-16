@@ -1,0 +1,70 @@
+package atoffer;
+
+import utils.StackDemo;
+
+/*
+ * 包含最小值的栈，要求push,pop,min都为O(1)
+ */
+public class IncludeMinStack {
+
+	private StackDemo dataStack = new StackDemo();//数据栈
+	private StackDemo minStack = new StackDemo();//辅助栈
+	/*
+	 * 入栈
+	 */
+	public void push(int num)
+	{
+		dataStack.push("" + num);
+		if(minStack.empty())
+		{
+			minStack.push("" + num);
+		}else{
+			/********如果有更小的值就入辅助栈******/
+			if(num < Integer.parseInt(minStack.top()))
+			{
+				minStack.push("" + num);
+			}else{
+				/******为了让数据栈和辅助栈的元素一样多******/
+				minStack.push(minStack.top());
+			} 
+		}
+	}
+	/*
+	 * 出栈
+	 */
+	public int pop()
+	{
+		if(!dataStack.empty() && !minStack.empty())
+		{
+			minStack.pop();
+			return Integer.parseInt(dataStack.pop());
+		}else{
+			
+			return -1000;
+		}
+	}
+	/*
+	 * 得到最小值
+	 */
+	public int getMin()
+	{
+		return Integer.parseInt(minStack.top());
+	}
+	public void printStack()
+	{
+		System.out.print("数据栈中: ");
+		dataStack.printStack();
+		System.out.print("辅助栈中: ");
+		minStack.printStack();
+		
+	}
+	public static void main(String[] args) {
+		IncludeMinStack stack = new IncludeMinStack();
+		stack.push(2);
+		stack.push(3);
+		stack.push(1);
+		stack.printStack();
+		stack.pop();
+		stack.printStack();
+	}
+}

@@ -1,0 +1,155 @@
+#include<stdio.h>
+#include<malloc.h>
+/***复杂链表的复制***/
+/**复杂链表的结构体**/
+typedef struct LNode{
+   char data;
+   struct LNode *next;//指向下一个结点
+   struct LNode *random;//指向随机结点
+}LNode, *LinkList;
+
+LinkList Head;//头结点
+LinkList cloneHead;//克隆链表头结点
+/*
+* 创建链表
+*/
+void createLinkedList()
+{
+	/********创建链表头结点*****/
+	Head = (LinkList)malloc(sizeof(LNode));
+    Head->next = NULL;
+	Head->random = NULL;
+    /******创建链表的所有结点***/
+	LinkList pA, pB, pC, pD, pE;
+    pA = (LinkList)malloc(sizeof(LNode));
+    pB = (LinkList)malloc(sizeof(LNode));
+	pC = (LinkList)malloc(sizeof(LNode));
+	pD = (LinkList)malloc(sizeof(LNode));
+	pE = (LinkList)malloc(sizeof(LNode));
+	pA->data = 'A';
+	pB->data = 'B';
+	pC->data = 'C';
+	pD->data = 'D';
+	pE->data = 'E';
+	/*****next连接*******/
+	Head->next = pA;
+	pA->next = pB;
+	pB->next = pC;
+	pC->next = pD;
+	pD->next = pE;
+	pE->next = NULL;
+ 	/*****random连接*******/
+	pA->random = pC;
+	pB->random = pE;
+	pD->random = pB;
+
+	pC->random = NULL;
+	pE->random = NULL;
+
+	printf("链表创建完成!");
+}
+/*
+* 复杂链表的克隆
+*/
+void cloneLinkedList()
+{
+	/*****在原来的链表上，每一个结点后面克隆一份******/
+	cloneHead = (LinkList)malloc(sizeof(LNode));
+	cloneHead->next = NULL;
+	cloneHead->random = NULL;
+    
+	if(Head == NULL || Head->next == NULL)
+	{
+	   printf("Head链表为空!\n");
+       return ;
+	}
+    LinkList p = Head->next;
+	LinkList pnext;//p指针后面的结点
+	LinkList clone;//克隆结点的指针
+	while(p)
+	{
+       clone = (LinkList)malloc(sizeof(LNode));
+	   clone->data = p->data;
+	   clone->next = NULL;
+	   clone->random = NULL;
+
+	   pnext = p->next;
+	   clone->next = pnext;
+	   p->next = clone;
+	   
+	   p = pnext;
+	}
+	/******设置random指针********/
+    p = Head->next;
+	while(p)
+	{
+	   clone = p->next;
+	   if(p->random == NULL)
+	   {
+          clone->random = NULL;
+	   }else{
+          clone->random = p->random->next;
+	   }
+       
+	   p = clone->next;
+	}
+	/****复原原链表并抽出克隆链表***/
+	p = Head->next;
+	LinkList end;//克隆链表最后一个结点的指针
+	end = cloneHead;
+	while(p)
+	{
+	  clone = p->next;
+	  /****在克隆链表上挂载***/
+	  end->next = clone;
+	  end = end->next;
+
+	  /**原链表复原**/
+	  pnext = clone->next;
+	  p->next = pnext;
+	  p = pnext;
+	}
+	printf("克隆链表完成!\n");
+}
+/*
+* 打印链表的指针进行比较
+*/
+void printLinkedListAddress(LinkList srcHead, LinkList cloneHead)
+{
+	if(srcHead == NULL || srcHead->next == NULL)//鲁棒性
+	{  
+		printf("1");
+		return ;
+	}
+	if(cloneHead == NULL || cloneHead->next == NULL)//鲁棒性
+	{
+	   printf("2");
+       return ;
+	}
+    LinkList src = srcHead->next;
+	LinkList clone = cloneHead->next;
+	printf("打印原链表的结点地址\n");
+	while(src)
+	{
+		printf("Address = 0x%x  ", src);
+		printf("src->data = %c  ", src->data);
+		printf("src->next = 0x%x  ", src->next);
+		printf("src->random = 0x%x\n", src->random);
+		src = src->next;
+	}
+	printf("打印克隆链表的结点地址\n");
+    while(clone)
+	{
+	   printf("Address = 0x%x  ", clone);
+       printf("clone->data = %c  ", clone->data);
+	   printf("clone->next = 0x%x  ", clone->next);
+	   printf("clone->random = 0x%x\n", clone->random);
+	   clone = clone->next;
+	}
+}
+int main()
+{
+   createLinkedList();
+   cloneLinkedList();
+   printLinkedListAddress(Head, cloneHead);
+}

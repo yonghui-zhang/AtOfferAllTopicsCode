@@ -1,0 +1,58 @@
+#include<stdio.h>
+/****数组中只出现一次的数字****/
+/*
+* 找到从尾到头的第一个为1的位
+*/
+int getFirst1Digit(int num)
+{
+	int digit = 1;//倒数第一位
+	while(digit <= 4*8)
+	{
+		if(num & 1)
+		{ 
+           return digit;
+		}
+        num = num >> 1;
+		digit++;
+	}
+	return -1;
+}
+/*
+* 得到两个不同的数字
+*/
+void findTwoNumShowOnceInNums(int nums[], int length)
+{
+    /****第一次是得到这两个数字的异或结果***/
+	int result = 0;
+	for(int i=0;i<length;i++)
+	{
+        result = result ^ nums[i];
+	}
+	int digit = getFirst1Digit(result);
+	if(digit == -1)
+	{
+		printf("数据错误!\n");
+        return ;
+	}
+	int num1 = 0;
+	int num2 = 0;
+	/*****判断第n位是不是1来决定分组*****/
+	for(i=0;i<length;i++)
+	{
+        if((nums[i]>>(digit-1)) & 1)
+		{
+            num1 = num1 ^ nums[i];
+		}else{
+            num2 = num2 ^ nums[i];
+		}
+	}
+	printf("num1 = %d\n", num1);
+	printf("num2 = %d\n", num2);
+}
+
+int main()
+{
+	int nums[] = {2, 4, 3, 6, 3, 2, 5, 5};
+	int length = 8;
+    findTwoNumShowOnceInNums(nums, length);
+}

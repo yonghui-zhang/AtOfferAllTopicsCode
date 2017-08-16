@@ -1,0 +1,130 @@
+#include<stdio.h>
+#include<string.h>
+/**打印1到最大的n位数**/
+/*
+* 传统的想法
+*/
+void normalPrint(int n)
+{  
+   int number = 1;
+   /**得到比n位最大的数还大1的数**/
+   for(int i=0;i<n;i++)
+   {
+      number *= 10;
+   }
+   /**刚好是打印1到n位最大的数**/
+   for(int j=1;j<number;j++)
+   {
+      printf("%d ", j);
+   }
+}
+/*
+* 判断是否退出循环
+*/
+bool ifOver(char* number)
+{
+      bool ifOverflow = false;
+	  int takeOver = 0;//进位
+	  int length = strlen(number);
+	  /****从个位开始检测是否进位*****/
+	  for(int i=length-1;i>=0;i--)
+	  {
+          int sum = number[i] - '0' + takeOver;
+		  if(i == length - 1)
+		  {
+             /**数字加1，进位发生在个位**/
+			  sum++;
+		  }
+		  /****发生进位*****/
+		  if(sum >= 10)
+		  {
+             /***999进位说明结束***/
+             if(i == 0)
+			 {
+                 ifOverflow = true;
+			 }else{
+                 sum = sum -10;//进位之后，该位置为0
+				 takeOver = 1;//进位的1
+				 number[i] = '0' + sum;
+			 }
+		  }else{
+			  /***没有进位发生，直接退出循环，
+			  因为只有进位发生才有可能触发结束条件**/
+              number[i] = '0' + sum;
+			  break;
+		  }
+	  }
+	  return ifOverflow;
+}
+/*
+* 打印数字
+*/
+void printNumber(char* number)
+{
+	int length = strlen(number);//'\0'在这里起作用
+	int beginZero = true;
+    for(int i=0;i<length;i++)
+	{
+	   /**只去掉前面的0，后面的0要保留**/
+       if(number[i] != '0')
+	   {
+           beginZero = false;
+	   }
+	   if(!beginZero)
+	   {
+		   printf("%c", number[i]);
+	   }
+	}
+    printf(" ");
+}
+/*
+* 利用字符串存储数字打印
+*/
+void stringPrint(int n)
+{
+    if(n <= 0)
+	{
+       return ;
+	}
+	/*******申请内存********/
+	char* number = new char[n+1];
+	memset(number, '0', n);
+	number[n] = '\0';
+	while(!ifOver(number))
+	{
+        printNumber(number);
+	}
+	delete [] number;//释放内存
+}
+/*
+* 全排列算法
+*/
+void fullPlay(char* number, int n, int index)
+{
+   if(index >= n)
+   {
+	  printNumber(number);
+      return ;
+   }
+   for(int i=0;i<10;i++)
+   {
+       number[index] = '0' + i;
+	   fullPlay(number, n, index+1);
+   }
+}
+/*
+*  全排列递归输出1-999
+*/
+void fullPlayPrint(int n)
+{ 
+	char* number = new char[n+1];
+	number[n] = '\0';
+    fullPlay(number, n, 0);
+	delete [] number;
+}
+int main()
+{
+//  normalPrint(300);
+//    stringPrint(5);
+	fullPlayPrint(3);
+}

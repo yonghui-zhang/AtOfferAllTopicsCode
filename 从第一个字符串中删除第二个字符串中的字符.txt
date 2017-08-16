@@ -1,0 +1,39 @@
+#include<stdio.h>
+#include<string.h>
+/***从第一个字符串中删除在
+第二个字符串中出现的所有字符***/
+/*
+*  得到删除字符后的新字符串
+*/
+void getNewStringAfterDelete(char str1[], char str2[])
+{
+	if(str1 == NULL || str2 == NULL)//鲁棒性
+	{
+       return ;
+	}
+    int ascii[256];
+	for(int i=0;i<256;i++)
+	{
+         ascii[i] = 0;
+	}
+	/*****让第二个字符串的字符进桶*****/
+	for(i=0;i<strlen(str2);i++)
+	{
+       ascii[str2[i]]++;
+	}
+	/***遍历第一个字符串看相关桶中是否有记录***/
+	for(i=0;i<strlen(str1);i++)
+	{
+        if(ascii[str1[i]] == 0)
+		{
+           printf("%c", str1[i]);
+		}
+	}
+	printf("\n");
+}
+int main()
+{
+	char str1[] = {"We are students."};
+	char str2[10] = {"aeiou"};
+    getNewStringAfterDelete(str1, str2);
+}

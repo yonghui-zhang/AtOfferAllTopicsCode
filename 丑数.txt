@@ -1,0 +1,60 @@
+#include<stdio.h>
+/*****丑数****/
+/*
+* 得到三个数中的最小值
+*/
+int getThreeMostMinFlag(int num1, int num2, int num3)
+{
+	int min = num1 < num2 ? num1 : num2;
+	min = min < num3 ? min : num3;
+	return min;
+}
+/*
+* 得到第n个丑数
+*/
+int getNthUglyNumber(int n)
+{
+   int* uglyNums = new int[n];
+   uglyNums[0] = 1;
+   int nextUgly = 1;
+
+   int multiply2 = 0;//当前由乘2得出的最大丑数
+   int multiply3 = 0;//当前由乘3得出的最大丑数
+   int multiply5 = 0;//当前由乘5得出的最大丑数
+   while(nextUgly < n)
+   {
+        int min = getThreeMostMinFlag(uglyNums[multiply2]*2, uglyNums[multiply3]*3, uglyNums[multiply5]*5);
+		uglyNums[nextUgly] = min;
+	    while(uglyNums[multiply2]*2 <= uglyNums[nextUgly])
+		{
+             multiply2++;
+		}
+		while(uglyNums[multiply3]*3 <= uglyNums[nextUgly])
+		{
+             multiply3++;
+		}
+		while(uglyNums[multiply5]*5 <= uglyNums[nextUgly])
+		{
+             multiply5++;
+		}
+		nextUgly++;
+   }
+   /********打印所有丑数********/
+   for(int i=0;i<nextUgly;i++)
+   {
+      printf("%d ", uglyNums[i]);
+   }
+   int ugly = uglyNums[nextUgly - 1];
+   delete [] uglyNums;
+   return ugly;
+}
+int main()
+{
+	int n = 1500;
+	if(n <= 0)
+	{
+       return ;
+	}
+    int ugly = getNthUglyNumber(n);
+	printf("第%d个丑数是: %d\n", n, ugly);
+}

@@ -1,0 +1,88 @@
+#include<stdio.h>
+#include<malloc.h>
+/***二叉树的镜像***/
+/***结构体****/
+typedef struct TreeNode
+{
+	int data;
+	struct TreeNode *lchild;
+	struct TreeNode *rchild;
+}TreeNode,*BiTree;
+
+/*
+* 创建一棵树
+*/
+void createTree(BiTree &T)
+{
+    int ch;
+	scanf("%d",&ch);
+	if(ch == 0)//0为输入结束的条件
+	{
+		T=NULL;
+	}
+	else{
+		T = (BiTree)malloc(sizeof(TreeNode));
+		T->data = ch;
+		createTree(T->lchild);
+		createTree(T->rchild);
+	}
+}
+
+/*
+* 前序遍历打印输出
+*/
+void print(BiTree &root)
+{
+   if(root)
+   {
+       printf("%d ", root->data);
+	   print(root->lchild);
+	   print(root->rchild);
+   } 
+}
+/*
+* 对一棵二叉树进行镜像(递归到最下层才开始交换左右子树)
+*/
+void mirrorTree(BiTree root)
+{
+    if(root)
+	{
+		mirrorTree(root->lchild);
+		mirrorTree(root->rchild);
+		BiTree T;
+		T = root->lchild;
+		root->lchild = root->rchild;
+		root->rchild = T;
+	}
+}
+/*
+* 对一棵二叉树进行镜像(递归到一层就开始交换左右子树)
+*/
+void mirrorTree2(BiTree root)
+{
+    if(root)
+	{
+		BiTree T;
+		T = root->lchild;
+		root->lchild = root->rchild;
+		root->rchild = T;
+		mirrorTree2(root->lchild);
+		mirrorTree2(root->rchild);
+		
+	}
+}
+
+int main()
+{
+   BiTree root = NULL;
+   printf("创建二叉树: ");
+   createTree(root);
+   printf("创建二叉树完成!\n");
+   printf("进行镜像前的二叉树先根遍历为: ");
+   print(root);
+ //  mirrorTree(root);
+   mirrorTree2(root);
+   printf("\n进行镜像后的二叉树先根遍历为: ");
+   print(root);
+   printf("\n");
+}

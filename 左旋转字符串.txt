@@ -1,0 +1,53 @@
+#include<stdio.h>
+#include<string.h>
+/***×óÐý×ª×Ö·û´®***/
+/*
+* ·­×ª×Ö·û´®²¿·Ö
+*/
+void getOverturnString(char string[], int start, int end)
+{
+   if(string == NULL || strlen(string) <= 0)
+   {
+        return ;
+   }
+   if(start < 0 || end >= strlen(string) || start >= end)
+   {
+       return ;
+   }
+   while(start < end)
+   {
+       /****½»»»×ÖÄ¸Ë³Ðò****/
+	   char temp = string[start];
+	   string[start] = string[end];
+	   string[end] = temp;
+	   start++;
+	   end--;
+   }
+}
+/*
+* ×óÐý×ª×Ö·û´®
+*/
+void getLeftOverturnString(char string[], int location)
+{
+	if(string == NULL || strlen(string) <= 0)
+	{
+        return ;
+	}
+	if(location < 0 || location >= strlen(string))
+	{
+        return ;
+	}
+	/*****È«²¿·­×ª******/
+    getOverturnString(string, 0, strlen(string)-1);
+	/*******²¿·Ö·­×ª*****/
+	int mid = strlen(string)-location-1;
+    getOverturnString(string, 0, mid);
+	getOverturnString(string, mid+1, strlen(string)-1);
+}
+int main()
+{
+  char string[] = "abcdefg";
+  int location = 2;
+  getLeftOverturnString(string, location);
+  printf("%s\n", string);
+}

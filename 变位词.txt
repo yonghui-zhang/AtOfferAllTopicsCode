@@ -1,0 +1,58 @@
+#include<stdio.h>
+#include<string.h>
+/***变位词***/
+int ifChangeLocaString(char str1[], char str2[])
+{
+	if(str1 == NULL || str2 == NULL)
+	{
+       return -1;
+	}
+	/***两个字符串的长度不一样肯定不是变位词***/
+	if(strlen(str1) != strlen(str2))
+	{
+       return -2;
+	}
+	int ascii[256];
+	for(int i=0;i<256;i++)
+	{
+		ascii[i] = 0;
+	}
+	/****第一个字符串进桶****/
+	for(i=0;i<strlen(str1);i++)
+	{
+		ascii[str1[i]]++;
+	}
+	/***第二个字符串对桶的计数进行抵消***/
+	for(i=0;i<strlen(str2);i++)
+	{
+       ascii[str2[i]]--;
+	}
+	/****检查是不是都是0****/
+    for(i=0;i<256;i++)
+	{
+       if(ascii[i] != 0)
+	   {
+           return 0;
+	   }
+	}
+	return 1;
+}
+int main()
+{
+	char str1[] = {"silent"};
+	char str2[] = {"listen"};
+    int result = ifChangeLocaString(str1, str2);
+	if(result == -1)
+	{
+        printf("任意一个字符串不能为空!\n");
+	}else if(result == -2)
+	{
+        printf("两个字符串的长度不一样，不互为变位词!\n");
+	}else if(result == 0)
+	{
+         printf("不互为变位词!\n");
+	}else if(result == 1)
+    {
+        printf("互为变位词\n");
+	}
+}

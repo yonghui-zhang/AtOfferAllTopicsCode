@@ -1,0 +1,52 @@
+#include<stdio.h>
+/****最长公共子序列***/
+int getTwoNumMax(int number1, int number2)
+{
+	return number1 > number2 ? number1 : number2;
+}
+/*
+* 从末尾向开头匹配
+*/
+int getLongestCommenListLength(int num1[], int num2[], int i, int j)
+{
+	if(i>=0 && j>=0)
+	{
+	    if(num1[i] == num2[j])
+		{
+		   return getLongestCommenListLength(num1, num2, i-1, j-1) + 1;
+		}else{
+           return getTwoNumMax(getLongestCommenListLength(num1, num2, i, j-1), 
+			                   getLongestCommenListLength(num1, num2, i-1, j));
+		}	
+	}else{
+       return 0;
+	}
+}
+/*
+* 从开始到末尾匹配
+*/
+int getLongestCommenListLength2(int num1[], int num2[], int length1, int length2, int i, int j)
+{
+	if(i<length1 && j<length2)
+	{
+	    if(num1[i] == num2[j])
+		{
+		   return getLongestCommenListLength2(num1, num2, length1, length2, i+1, j+1) + 1;
+		}else{
+           return getTwoNumMax(getLongestCommenListLength2(num1, num2, length1, length2, i, j+1), 
+			                   getLongestCommenListLength2(num1, num2, length1, length2, i+1, j));
+		}	
+	}else{
+       return 0;
+	}
+}
+int main()
+{
+	int num1[] = {1, 2, 5, 6, 7, 8};
+	int num2[] = {5, 6, 7, 1, 2, 8};
+	int length1 = 6;
+	int length2 = 6;
+	int max = getLongestCommenListLength(num1, num2,  length1-1, length2-1);
+    int max2 = getLongestCommenListLength2(num1, num2, length1, length2, 0, 0);
+	printf("最长公共子序列的长度为: %d\n", max);
+}

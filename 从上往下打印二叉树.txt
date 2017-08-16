@@ -1,0 +1,91 @@
+#include<stdio.h>
+#include<malloc.h>
+/***从上往下打印二叉树***/
+/***结构体****/
+typedef struct TreeNode
+{
+	int data;
+	struct TreeNode *lchild;
+	struct TreeNode *rchild;
+}TreeNode,*BiTree;
+
+BiTree treeQueue[100];//队列
+int startQueue = 0;//队列的开头
+int endQueue = 1;//队列的结尾
+/*
+* 创建一棵树
+*/
+void createTree(BiTree &T)
+{
+    int ch;
+	scanf("%d",&ch);
+	if(ch == 0)//0为输入结束的条件
+	{
+		T=NULL;
+	}else{
+		T = (BiTree)malloc(sizeof(TreeNode));
+		T->data = ch;
+		createTree(T->lchild);
+		createTree(T->rchild);
+	}
+}
+/*
+* 从上往下打印二叉树
+*/
+void printTreeUpToDown(BiTree root)
+{
+	if(root == NULL)
+	{
+       return ;
+	}
+	treeQueue[startQueue] = root;
+	while(startQueue < endQueue)
+    { 
+       printf("%d ", treeQueue[startQueue]->data);
+	  
+	   /****如果存在左孩子就进队列*****/
+	   if(treeQueue[startQueue]->lchild)
+	   {
+           treeQueue[endQueue] = treeQueue[startQueue]->lchild;
+		   if(endQueue+1 < 100)
+		   {
+			   endQueue++;
+		   }else{
+			   printf("内存已满!\n");
+               return ;
+		   }
+	   }
+	   /*****如果存在右孩子就进队列******/
+	   if(treeQueue[startQueue]->rchild)
+	   {
+           treeQueue[endQueue] = treeQueue[startQueue]->rchild;
+		   if(endQueue+1 < 100)
+		   {
+               endQueue++;
+		   }else{
+			   printf("内存已满!\n");
+               return ;
+		   }   
+	   }
+
+	   if(startQueue+1 < 100)
+	   {
+           startQueue++;//出队列
+	   }else{
+		   printf("内存已满!\n");
+           return ;
+	   }
+    }
+}
+
+int main()
+{
+   BiTree root;
+   printf("创建一棵树: ");
+   createTree(root);
+   printf("二叉树创建完毕!\n");
+   printf("从上往下打印二叉树: ");
+   printTreeUpToDown(root);
+   printf("\n");
+}
+

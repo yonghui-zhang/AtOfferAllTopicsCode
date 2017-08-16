@@ -1,0 +1,88 @@
+#include<stdio.h>
+#include<malloc.h>
+/***结构体****/
+typedef struct TreeNode
+{
+	int data;
+	struct TreeNode *lchild;
+	struct TreeNode *rchild;
+}TreeNode,*BiTree;
+
+BiTree head,tail = NULL;//头结点和根结点
+/*
+*  初始化链表
+*/
+void init()
+{
+   head = (BiTree)malloc(sizeof(TreeNode));
+   head->rchild = NULL;
+}
+
+/*
+* 创造一棵二叉树
+*/
+void CreateTree(BiTree &T)
+{
+	int ch;
+	scanf("%d",&ch);
+	if(ch == 0)//0为输入结束的条件
+	{
+		T=NULL;
+	}
+	else{
+		T = (BiTree)malloc(sizeof(TreeNode));
+		T->data = ch;
+		CreateTree(T->lchild);
+		CreateTree(T->rchild);
+	}
+}
+
+/*
+* 中根遍历，保证遍历的结点值从小到大排列
+*/
+void MidOrder(BiTree &T)
+{
+	if(T)
+	{
+		BiTree current = T;//避免回溯出现问题
+		MidOrder(current->lchild);//访问左孩子
+        if(head->rchild == NULL)
+		{
+			/***第一个结点加入链表***/
+			tail = current;
+			head->rchild = tail;
+			tail->lchild = head;
+		}else{
+			/***后边的结点加入链表**/
+            tail->rchild = current;
+			current->lchild = tail;
+			tail = tail->rchild;
+		}
+		MidOrder(current->rchild);//访问右孩子
+	}
+}
+/*
+* 输出双链表的值进行检验
+*/
+void print()
+{
+   BiTree T = head->rchild;
+   if(T == NULL)//判断是否为空的好习惯
+   {
+      return ;
+   }
+   while(T)
+   {
+      printf("%d ", T->data);
+	  T = T->rchild;
+   }
+}
+
+int main()
+{
+   BiTree T;
+   init();//初始化
+   CreateTree(T);//创建树
+   MidOrder(T);//二叉树变换为双向链表
+   print();//输出双向链表
+}

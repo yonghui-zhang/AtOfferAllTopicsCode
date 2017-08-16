@@ -1,0 +1,54 @@
+#include<stdio.h>
+/***快速排序算法****/
+void quickSort(int num[], int start, int end)
+{
+  if(start >= end)
+  {
+     return ;
+  }
+  int temp = num[start];//基数
+  int left = start;
+  int right = end;
+  /*****进行一次快速排序********/
+  while(left < right)
+  {
+	  while((num[right] >= temp) && (left < right))
+	  {
+          right--;
+	  }
+	  while((num[left] <= temp) && (left < right))
+	  {
+          left++;
+	  }
+	  if(left < right)
+	  {
+         num[left] = num[left] + num[right];
+	     num[right] = num[left] - num[right];
+	     num[left] = num[left] - num[right];
+	  }
+  }
+  /****将基数插入它应该处于的位置******/
+  num[start] = num[left];
+  num[left] = temp;
+  /*******递归实现排序左部分和右部分******/
+  quickSort(num, start, left-1);
+  quickSort(num, left+1, end);
+}
+/*
+* 打印数组
+*/
+void printNum(int num[], int length)
+{
+	for(int i=0;i<length;i++)
+	{
+       printf("%d ", num[i]);
+	}
+	printf("\n");
+}
+int main()
+{
+	int num[9] = {2, 1, 3, 4, 6, 5, 9, 8, 7};
+	quickSort(num, 0, 8);
+	printf("快排算法排序结果: ");
+    printNum(num, 9);
+}

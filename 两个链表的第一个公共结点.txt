@@ -1,0 +1,139 @@
+#include<stdio.h>
+#include<malloc.h>
+/***两个链表的第一个公共结点***/
+typedef struct LNode{
+  int data;
+  struct LNode *next;
+}LNode, *LinkList;
+
+LinkList Head1;//链表1的头
+LinkList Head2;//链表2的头
+/*
+* 初始化链表
+*/
+void initLinkList()
+{
+   Head1 = (LinkList)malloc(sizeof(LNode));
+   Head1->next = NULL;
+   Head2 = (LinkList)malloc(sizeof(LNode));
+   Head2->next = NULL;
+   LinkList end1 = Head1;//第一个链表的尾结点指针
+   LinkList end2 = Head2;//第二个链表的尾结点指针
+   LinkList p;
+   /*****给链表赋值*****/
+   for(int i=1;i<=5;i++)
+   {
+       p = (LinkList)malloc(sizeof(LNode));
+       p->data = i;
+       p->next = NULL;
+       if(i<=3)
+	   {
+		  end1->next = p;
+          end1 = end1->next;
+	   }else{
+          end2->next = p;
+          end2 = end2->next;
+	   }   
+   }
+   p = (LinkList)malloc(sizeof(LNode));
+   p->data = 6;
+   p->next = NULL;
+
+   end1->next = p;
+   end2->next = p;
+   end1 = end1->next;
+   end2 = end2->next;
+
+   p = (LinkList)malloc(sizeof(LNode));
+   p->data = 7;
+   p->next = NULL;
+   
+   end1->next = p;
+   end2->next = p;
+   end1 = end1->next;
+   end2 = end2->next;
+}
+/*
+* 打印链表
+*/
+void printLinkList(LinkList p)
+{
+	while(p)
+	{
+       printf("%d ", p->data);
+	   p = p->next;
+	}
+	printf("\n");
+}
+/*
+* 得到链表的长度
+*/
+int getLinkListLength(LinkList Head)
+{
+	if(Head == NULL)
+    {
+        return 0;
+	}
+	int length = 0;
+	LinkList p = Head->next;
+	while(p)
+	{
+        length++;
+		p = p->next;
+	}
+	return length;
+}
+/*
+* 得到两个链表的第一个公共结点
+*/
+LinkList getTwoLinkListCommonNode(LinkList Head1, LinkList Head2)
+{
+	if(Head1 == NULL || Head2 == NULL)
+    {
+        return NULL;
+	}
+	int length1 = getLinkListLength(Head1);
+	int length2 = getLinkListLength(Head2);
+	if(length1 == 0 || length2 == 0)
+	{
+        return NULL;
+	}
+	LinkList p1 = Head1->next;
+	LinkList p2 = Head2->next;
+    int step = 0;//提前走的步数
+	if(length1 > length2)
+	{
+        step = length1 - length2;
+		while(step > 0)
+		{
+           p1 = p1->next;
+		   step--;
+		}
+	}else if(length1 < length2){
+        step = length2 - length1;
+		while(step > 0)
+		{
+           p2 = p2->next;
+		   step--;
+		}
+	}
+	while((p1 && p2) && (p1->data != p2->data))
+	{
+       p1 = p1->next;
+	   p2 = p2->next;
+	}
+	if(p1 && p2)
+	{
+        return p1;
+	}else{
+        return NULL;
+	}
+}
+int main()
+{
+   initLinkList();
+   printLinkList(Head1->next);
+   printLinkList(Head2->next);
+   LinkList common = getTwoLinkListCommonNode(Head1, Head2);
+   printLinkList(common);
+}

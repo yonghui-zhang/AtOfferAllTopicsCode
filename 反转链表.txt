@@ -1,0 +1,119 @@
+#include<stdio.h>
+#include<malloc.h>
+typedef struct LNode{
+  int data;
+  struct LNode *next;
+}LNode, *LinkList;
+
+bool ifend = true;
+LinkList Head;
+LinkList p1;//前n-1个结点或头结点
+LinkList p2;//尾结点
+/*
+* 初始化链表
+*/
+void initLinkList()
+{
+   Head = (LinkList)malloc(sizeof(LNode));
+   Head->next = NULL;
+   /*****给链表赋值*****/
+   for(int i=0;i<5;i++)
+   {
+       LinkList p = (LinkList)malloc(sizeof(LNode));
+	   p->data = i;
+	   p->next = NULL;
+	 
+	   p->next = Head->next;
+	   Head->next = p;
+   }
+}
+/*
+* 打印链表
+*/
+void printLinkList()
+{
+    LinkList p = Head->next;
+	while(p)
+	{
+       printf("%d ", p->data);
+	   p = p->next;
+	}
+	printf("\n");
+}
+/*
+* 递归实现反转链表
+*/
+void reverseLinkList(LinkList pre, LinkList p)
+{ 
+	if(p != NULL)
+	{
+        reverseLinkList(p, p->next);
+		if(ifend)
+		{
+           ifend = false;
+		   Head->next = p;
+		}
+        p->next = pre;
+    }
+}
+/*
+*  反转链表方法2
+*/
+void reverseLinkList2()
+{
+	LinkList pre;
+	LinkList p;
+	LinkList after;
+	bool iffirst = true;//第一个结点要设置下一个结点为NULL
+	if(Head != NULL && Head->next != NULL)
+	{
+        pre = Head;
+	    p = Head->next;
+	}else{
+        return ;
+	}
+	if(p->next == NULL)
+	{
+		printf("链表只有一个结点，无法反转\n");
+		return ;
+	}
+	after = p->next;
+	while(after != NULL)
+	{
+		if(iffirst)
+		{
+           p->next = NULL;
+		   iffirst = false;
+		}else{
+           p->next = pre;
+		}
+		pre = p;
+		p = after;
+		after = after->next;
+	}
+	p->next = pre;
+	Head->next = p;
+}
+int main()
+{
+  initLinkList();
+  printLinkList();
+  /*
+    //方法1 递归实现反转链表
+  if(Head != NULL && Head->next != NULL)
+  {
+	 LinkList pre = Head->next;
+	 if(pre->next != NULL)
+	 {
+		 //至少两个结点
+		 reverseLinkList(pre, pre->next);
+		 pre->next = NULL;
+	 }else{
+        //只有一个结点
+		 printf("链表只有一个结点，无法反转");
+	 }
+  }
+  */
+  reverseLinkList2();
+  printLinkList();
+}

@@ -1,0 +1,99 @@
+#include<stdio.h>
+/**二叉搜索树的后序遍历序列**/
+//int num[] = {5, 7, 6, 9, 11, 10, 8};//序列1
+int num[] = {7, 4, 6, 5};//序列2
+int length = 4;
+/*
+* 判断一个序列是否是某个二叉搜索树的后序遍历序列
+*/
+bool checkIfAfterSearchList(int num[], int start, int end)
+{
+   if(start < end)
+   {
+	   if(end < 0)
+	   {
+		   printf("数组越界错误!\n");
+           return false;
+	   }
+	   int root = num[end];//当前子树的根结点
+	   int mid = -1;
+	   for(int i=start;i<end;i++)
+	   {
+		   if(num[i] > root)
+		   {
+              mid = i;
+			  break;
+		   }
+	   }
+	   /******没有找到mid，说明没有右子树*********/
+	   bool leftTree = true;
+	   bool rightTree = true;
+	   if(mid == -1)
+	   { 
+		   rightTree = false;
+		   mid = end;
+	   }
+	   /******说明没有左子树*******/
+	   if(mid == start)
+	   {
+		   leftTree = false;
+	   }
+      /********左右两棵子树都有****************/
+       bool checkLeftTree = true;//默认是正确（包括左子树为空也为正确）
+	   bool checkRightTree = true;//默认是正确（包括右子树为空也为正确）
+	   if(leftTree)//左子树存在
+	   {
+           if(start == mid-1)//只有一个结点
+		   {
+			   checkLeftTree = true;
+		   }else{
+               checkLeftTree = checkIfAfterSearchList(num, start, mid-1);
+		   }
+	   }
+	   if(rightTree)//右子树存在
+	   {
+		   bool flag = false;//开关
+		   /*****看右子树中有没有比根结点小的结点*****/
+           for(i=mid+1;i<end;i++)
+		   {
+               if(num[i] < root)
+			   {
+				   flag = true;
+				   break;
+			   }
+		   }
+		   if(flag)//触发开关
+		   {
+              checkRightTree = false;
+		   }else{
+              if(mid == end-1)//只有一个结点
+			  {
+			     checkRightTree = true;
+			  }else{
+                 checkRightTree = checkIfAfterSearchList(num, mid, end-1);
+			  }
+		   } 
+	   }
+	   if(checkLeftTree && checkRightTree)//左右子树均正确
+	   {
+           return true;
+	   }else{
+           return false;
+	   } 
+   }else if(start == end){//只有一个结点
+       return true;
+   }else{
+       return false;
+   }
+}
+
+int main()
+{
+  bool result = checkIfAfterSearchList(num, 0, length-1);
+  if(result)
+  {
+     printf("该序列是二叉搜索树的后序遍历序列!\n");
+  }else{
+     printf("该序列不是二叉搜索树的后序遍历序列!\n");
+  }
+}

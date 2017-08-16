@@ -1,0 +1,79 @@
+#include<stdio.h>
+/***扑克牌的顺子****/
+/*
+* 判断数据的合法性
+*/
+bool checkInputLegal(int paper[], int length)
+{
+	if(paper == NULL && length != 5)
+	{
+		return false;
+	}
+	for(int i=0;i<length;i++)
+	{
+		if(paper[i] < 1 || paper[i] > 15)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+/*
+* 检查5张牌是不是顺子
+*/
+bool checkFivePaperIfStraight(int paper[])
+{
+	int bucket[1+15];//15张牌,0位补位
+	for(int i=0;i<16;i++)
+    {
+        bucket[i] = 0;
+	}
+	/*****进桶****/
+    for(i=0;i<5;i++)
+    {
+      bucket[paper[i]]++;
+    }
+	/*****检查是不是顺子******/
+	bool first = true;
+	int firstPaper = 0;//第一张牌
+	int lastPaper = 0;//最后一张牌
+    for(i=1;i<=13;i++)
+    {
+		if(bucket[i] > 1)//两张以上牌一样不可能是顺子
+		{
+		   return false;
+		}else if(bucket[i] == 1)
+		{
+            if(first)
+			{
+				firstPaper = i;
+				first = false;
+			}
+			lastPaper = i;
+		}
+	}
+	/***只要最大牌比最小牌大的范围不超过4，那么就是顺子，
+	           其余空位可由大小王补位****/
+	if(lastPaper-firstPaper > 4)
+	{
+       return false;
+	}
+    return true;
+}
+int main()
+{
+	/******定义大王为14，小王为15****/
+	int paper[5] = {5, 6, 8, 9, 15};
+	int length = 5;
+	if(!checkInputLegal(paper, length))
+	{
+       return ;
+	}
+	bool straight = checkFivePaperIfStraight(paper);
+	if(straight)
+	{
+		printf("是顺子!\n");
+	}else{
+        printf("不是顺子!\n");
+	}
+}

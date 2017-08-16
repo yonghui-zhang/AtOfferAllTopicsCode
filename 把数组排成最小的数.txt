@@ -1,0 +1,81 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#define LENGTH 3
+#define MAXSIZE 10
+/***把数组排成最小的数***/
+char strings[LENGTH][MAXSIZE+1];//限定每个字符串只能是10个
+int nums[LENGTH] = {3, 32, 321};
+char strCombine1[MAXSIZE*2+1];//拼接字符串1 number1+number2
+char strCombine2[MAXSIZE*2+1];//拼接字符串2 number2+number1
+/*
+* 数字转字符串，以防大数问题
+*/
+void numsToStrings()
+{
+   for(int i=0;i<LENGTH;i++)
+   {
+       sprintf(strings[i], "%d", nums[i]);
+   }
+}
+/*
+* 比较两个字符串的大小
+*/
+int compare(const void* strnumber1, const void* strnumber2)
+{
+    
+	strcpy(strCombine1, (const char*)strnumber1);
+	strcat(strCombine1, (const char*)strnumber2);
+
+	strcpy(strCombine2, (const char*)strnumber2);
+	strcat(strCombine2, (const char*)strnumber1);
+
+	return strcmp(strCombine1, strCombine2);
+}
+/*
+* 对字符串按从小到大排序
+*/
+///void sort()
+//{
+   /******冒泡排序******/
+///   for(int i=0;i<LENGTH-1;i++)
+ //  {
+//	   for(int j=0;j<LENGTH-1-i;j++)
+//	   {
+//           if(compare(strings[j], strings[j+1]) > 0)
+//		   {
+              /******交换位置*****/
+	/*		   char temp[MAXSIZE+1];
+			   strcpy(temp, strings[j]);
+			   strcpy(strings[j], strings[j+1]);
+			   strcpy(strings[j+1], temp);
+		   }
+	   }
+   }
+   
+}*/
+/*
+* 调用qsort()进行排序
+*/
+void sort2()
+{
+   qsort(strings, LENGTH, MAXSIZE+1, compare);
+}
+/*
+* 打印排好序的字符串
+*/
+void print()
+{
+   printf("把数组排成最小的数为: ");
+   for(int i=0;i<LENGTH;i++)
+   {
+	   printf("%s", strings[i]);
+   }
+   printf("\n");
+}
+int main()
+{
+    numsToStrings();
+	sort2();
+	print();
+}

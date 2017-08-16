@@ -1,0 +1,66 @@
+#include<stdio.h>
+/*调整数组顺序使
+  奇数在前
+  偶数在后*/
+int num[] = {1, 2, 3, 4, 5, 6, 7 ,8 ,9, 10};
+int length = 10;
+/*
+* 调整数组的顺序
+* 奇数在前，偶数在后
+*/
+void oddBeforeEvenAfter(int num[], int length)
+{
+   int start = 0;//p1
+   int end = length - 1;//p2
+   bool startEven = false;//p1指的是偶数
+   bool endOdd = false;//p2指的是奇数
+   while(start < end)
+   {
+	  /********判断p1指向的数************/
+      if((num[start] & 1))//奇数
+	  { 
+          start += 1;//往右移动
+	  }else if(!startEven){//防止重复赋值
+
+		  //前面的数是偶数，需要往后挪
+          startEven = true;
+	  }
+
+	  /********判断p2指向的数************/
+	  if((num[end] & 1) && !endOdd)//奇数判断和防止重复赋值
+	  {
+		 //后面的数是奇数，需要往前挪
+          endOdd = true;
+	  }else{
+          end -= 1;//往左移动
+	  }
+	  if(startEven && endOdd)
+	  {
+          num[start] += num[end];
+		  num[end] = num[start] - num[end];
+		  num[start] = num[start] - num[end];
+		  startEven = false;
+		  endOdd = false;
+	  }
+   }
+}
+
+/*
+* 打印数组
+*/
+void printNum(int num[], int length)
+{
+   for(int i=0;i<length;i++)
+   {
+      printf("%d ", num[i]);
+   }
+   printf("\n");
+}
+int main()
+{
+   printf("原数组是: ");
+   printNum(num, length);
+   oddBeforeEvenAfter(num, length);
+   printf("调整完顺序后是: ");
+   printNum(num, length);
+}

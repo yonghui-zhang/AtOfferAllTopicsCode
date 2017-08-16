@@ -1,0 +1,106 @@
+#include<stdio.h>
+#include<string.h>
+/**打印1到最大的n位数-BCD码优化**/
+/**BCD码表示0-9**/
+unsigned char BCD[5];//定长10位BCD码
+unsigned char ascii[10] = {'0', '1', '2', '3',
+                  '4', '5', '6', '7', 
+				  '8', '9'};//'0'-'9'
+/*
+* 初始化BCD数组
+*/
+void initBCD()
+{
+   for(int i=0;i<10;i+=2)
+   {
+      BCD[i/2] = (ascii[i]<<4) | (ascii[i+1] & 0x0f);
+   }
+   printf("%02x %x %x %x %x\n", BCD[0], BCD[1], BCD[2], BCD[3], BCD[4]);
+}
+/*
+* 打印数字
+*/
+void printNumber(char* number, int n)
+{
+	int beginZero = true;
+  
+    for(int i=0;i<n;i++)
+	{
+	   unsigned char ch;
+	   /**只去掉前面的0，后面的0要保留**/
+	   if(i % 2)//奇数
+	   {
+		  ch = number[i/2] & 0x0F;
+          if(ch && beginZero)//不为0
+		  {
+             beginZero = false;
+		  }
+	   }else{//偶数
+
+		   ch = (number[i/2] & 0xF0) >> 4;
+		   if(ch && beginZero)//不为0
+		   {
+              beginZero = false;
+		   }
+	   }
+	   if(!beginZero)
+	   {
+		   printf("%x", ch);
+	   }
+	}
+    printf(" ");
+}
+/*
+* 全排列算法
+*/
+void fullPlay(char* number, int n, int index)
+{
+    if(index >= n)
+	{
+	     printNumber(number, n);
+         return ;
+	}
+   
+   for(int i=0;i<10;i++)
+   {
+	   if(index % 2)//奇数
+	   {
+		   if(i % 2)//奇数
+		   {
+               number[index/2] = (number[index/2] & 0xF0) | (BCD[i/2] & 0x0F);//右侧 右侧
+		   }else{
+               number[index/2] = (number[index/2] & 0xF0) | ((BCD[i/2] & 0xF0) >> 4);//右侧 左侧
+		   }
+	   }else{
+		   if(i % 2)
+		   {
+               number[index/2] = (number[index/2] & 0x0F) | ((BCD[i/2] & 0x0F) << 4);//左侧 右侧
+		   }else{
+               number[index/2] = (number[index/2] & 0x0F) | (BCD[i/2] & 0xF0);//左侧 左侧
+		   }
+	   }
+      
+	   fullPlay(number, n, index+1);
+   }
+}
+/*
+*  全排列递归输出1-999
+*/
+void fullPlayPrint(int n)
+{ 
+	int memory = -1;
+	if(n % 2)//奇数n & 1
+	{
+       memory = (n+1)/2;//(n+1) >> 1;
+	}else{//偶数
+       memory = n/2;//n >> 1;
+	} 
+	char* number = new char[memory];
+    fullPlay(number, n, 0);
+	delete [] number;
+}
+int main()
+{
+	initBCD();
+	fullPlayPrint(3);
+}

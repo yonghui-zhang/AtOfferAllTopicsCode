@@ -1,0 +1,64 @@
+package utils;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+
+/*
+ * 栈
+ */
+public class StackDemo {
+
+	private LinkedList<String> stackList = new LinkedList<String>();
+	/*
+	 * 入栈
+	 */
+	public void push(String str)
+	{
+		stackList.addFirst(str);
+	}
+	/*
+	 * 出栈
+	 */
+	public String pop()
+	{
+		return stackList.removeFirst();
+	}
+	/*
+	 * 得到栈顶元素
+	 */
+	public String top()
+	{
+		return stackList.getFirst();
+	}
+	/*
+	 * 判断栈是否为空
+	 */
+	public boolean empty()
+	{
+		return stackList.isEmpty();
+	}
+	/*
+	 * 打印栈内所有的元素
+	 */
+	public void printStack()
+	{
+		Iterator iterator = stackList.iterator();
+		while(iterator.hasNext())
+		{
+			System.out.print(iterator.next() + " ");
+		}
+		System.out.println();
+	}
+	
+	public static void main(String[] args) {
+	  
+		StackDemo stack = new StackDemo();
+		System.out.println(stack.empty());
+		
+		stack.printStack();
+		stack.push("a");
+		stack.push("b");
+		System.out.println(stack.empty());
+		stack.printStack();
+	}
+}

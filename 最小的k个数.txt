@@ -1,0 +1,68 @@
+#include<stdio.h>
+/***最小的k个数***/
+#define K 4
+int temp[K];
+int tempflag = 0;
+int num[];
+/*
+* 返回temp辅助数组中的最大值的下标
+*/
+int findMaxFlag(int temp[], int length)
+{
+   if(length <= 0)
+   {
+      return -1;
+   }
+   int max = -1000;
+   int maxflag = -1;
+   for(int i=0;i<length;i++)
+   {
+      if(max < temp[i])
+	  {
+		  max = temp[i];
+		  maxflag = i;
+	  }
+   }
+   return maxflag;
+}
+/*
+* 寻找最小的k个数
+*/
+void findKthMinest(int num[], int length)
+{
+   for(int i=0;i<length;i++)
+   {
+	   /****如果temp数组没有满，那么就直接进数组***/
+      if(tempflag < K)
+	  {
+           temp[tempflag] = num[i];
+		   tempflag++;
+	  }else{
+           /****先判断该数和k数组里边的最大值****/
+		   int maxflag = findMaxFlag(temp, tempflag);
+           if(maxflag == -1)
+		   { 
+                return ;
+		   }else{
+			   /***把最大值替换掉***/
+			   if(temp[maxflag] > num[i])
+			   {
+                  temp[maxflag] = num[i];
+			   }
+		   }
+	  }
+
+   }
+}
+int main()
+{
+	int num[8] = {4, 5, 1, 6, 2, 7, 3, 8};
+    findKthMinest(num, 8);
+    /******输出最小的k个数*******/
+	printf("输出最小的k个数是: ");
+	for(int i=0;i<K;i++)
+	{
+		printf("%d ", temp[i]);
+	}
+	printf("\n");
+}

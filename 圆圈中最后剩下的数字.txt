@@ -1,0 +1,67 @@
+#include<stdio.h>
+/***圆圈中最后剩下的数字***/
+/*
+* 检查数据的合法性
+*/
+bool checkDataLegal(int nums[], int length)
+{
+	if(nums == NULL || length <= 0)
+	{
+         return false;
+	}
+	for(int i=0;i<length;i++)
+	{
+        if(nums[i] < 0)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+/*
+* 获得圆圈中最后剩下的数字
+*/
+int getLastLeftNum(int nums[], int length, int m)
+{
+    int deleteblock = 0;//被删除的块数
+	int flag = 1;
+	int position = 0;
+	int lastnum = 0;
+	while(deleteblock < length)
+	{
+	   position = position % length;
+	   /*****是删除掉的块直接跳过******/
+       if(nums[position] != -1)
+	   {
+		   if(flag < m)
+		   {
+              flag++;
+		   }else if(flag == m)
+		   {
+			 /****记录最后删除的一块***/
+			 if(deleteblock == length-1)
+			 {
+				lastnum = nums[position];
+			 }
+			 printf("%d ", nums[position]);
+		     nums[position] = -1;//标记代表删除
+		     deleteblock++;
+		     flag = 1;//第一位
+		   }
+	   }
+	   position++;
+	}
+	return lastnum;
+}
+int main()
+{
+	int nums[] = {0, 1, 2, 3, 4};
+	int length = 5;
+    int m = 3;
+	if(!checkDataLegal(nums, length))
+	{
+       return ;
+	}
+	int lastnum = getLastLeftNum(nums, length, m);
+	printf("\n最后剩余的数是: %d\n", lastnum);
+}

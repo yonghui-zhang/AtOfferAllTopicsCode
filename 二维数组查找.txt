@@ -1,0 +1,48 @@
+package atoffer;
+/*
+ * 题目：在二维数组中查找某个数
+ */
+public class ArraySearch {
+
+	
+	private int[][] matrix = {{1, 2, 8, 9},
+	                          {2, 4, 9, 12},
+	                          {4, 7, 10, 13},
+	                          {6, 8, 11, 15}};
+	/*
+	 * 在二维数组中查找某个数
+	 */
+	public boolean find(int[][] matrix, int rows, int cols, int number)
+	{
+		/***判断是否存在的好习惯*****/
+		if(matrix != null && rows > 0 && cols > 0)
+		{
+			int row = 0;//当前行
+			int col = cols - 1;//当前列
+			/******判断是否越界************/
+			while(row < rows && col >= 0)
+			{
+				/******找到这个数就直接返回*******/
+				if(matrix[row][col] == number)
+				{
+					return true;
+				}else if(matrix[row][col] > number)
+				{
+					col--;
+				}else{
+					row++;
+				}
+			}
+		}
+		return false;
+	}
+	public static void main(String[] args) {
+	   ArraySearch arraySearch = new ArraySearch();
+	   int rows = arraySearch.matrix.length;
+	   int cols = arraySearch.matrix[0].length;
+	   boolean ifFind = arraySearch.find(arraySearch.matrix, rows, cols, 70);
+	   System.out.println(ifFind);
+   
+	}
+
+}

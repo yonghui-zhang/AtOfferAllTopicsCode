@@ -1,0 +1,99 @@
+#include<stdio.h>
+#include<malloc.h>
+/**圆圈中最后剩下的数字2版本**/
+typedef struct LNode{
+   int data;
+   struct LNode *next;
+}LNode, *LinkList;
+LinkList Head;//表示初始的结点
+LinkList Tail;//屁股结点
+/*
+* 初始化环形链表
+*/
+void initRingLinkedList(int nums[], int length)
+{
+   if(nums == NULL || length <= 0)
+   {
+       return ;
+   }
+   Head = (LinkList)malloc(sizeof(LNode));
+   Head->data = nums[0];
+   Head->next = NULL;
+   LinkList end = Head;//尾指针
+
+   for(int i=1;i<length;i++)
+   {
+      LinkList p = (LinkList)malloc(sizeof(LNode));
+	  p->data = nums[i];
+	  p->next = NULL;
+
+	  end->next = p;
+	  end = end->next;
+   }
+   /*****首尾相连*****/
+   end->next = Head;
+   Tail = end;
+}
+/*
+* 获得圆圈中最后剩下的数字
+*/
+int getLastLeftNum(LinkList Head, LinkList Tail, int m)
+{
+  if(Head == NULL || Tail == NULL || m <= 0)
+  {
+     return -1;
+  }
+  LinkList p = Head;
+  LinkList pre = Tail;
+  int flag = 1;
+  /****当剩余最后一个结点的时候就退出****/
+  while(pre != p)
+  {
+      if(flag < m)
+	  {
+         flag++;
+		 pre = p;
+	     p = p->next;  
+	  }else if(flag == m){
+         /****删除结点****/
+		 printf("%d ", p->data);
+         pre->next = p->next;
+		 delete p;
+		 p = pre->next;
+		 flag = 1;
+	  }
+  }
+  printf("%d\n", p->data);
+  return p->data;
+}
+/*
+* 用公式得出规律求解
+*/
+int getLastLeftNum2(int nums[], int length, int m)
+{
+	int lastnum = 0;
+    for(int i=1;i<=length;i++)
+	{
+        if(i == 1)
+		{
+			lastnum = 0;
+		}else{
+            lastnum = (lastnum + m) % i;
+		}
+	}
+	return lastnum;
+}
+int main()
+{
+	int nums[] = {0, 1, 2, 3, 4};
+    int length = 5;
+	int m = 3;
+    initRingLinkedList(nums, length);
+    int lastnum = getLastLeftNum(Head, Tail, m);
+	if(lastnum != -1)
+	{
+      printf("最后剩余的数是: %d\n", lastnum);
+	}
+    lastnum = getLastLeftNum2(nums, length, m);
+	printf("最后剩余的数是: %d\n", lastnum);
+}

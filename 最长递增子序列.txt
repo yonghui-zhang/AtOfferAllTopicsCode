@@ -1,0 +1,44 @@
+#include<stdio.h>
+/***最长递增子序列***/
+/*
+* 得到最长递增子序列的长度
+*/
+int getMaxIncreaseChildListLength(int num[], int length)
+{
+   int *longest = new int[length];
+   /***先给每一个位置初始化为1***/
+   for(int i=0;i<length;i++)
+   {
+      longest[i] = 1;
+   }
+   /*****动态规划*******/
+   for(i=0;i<length;i++)
+   {
+	   for(int j=0;j<i;j++)
+	   {
+		   /***f(i) = max(f(j)) + 1, num[i] > num[j]***/
+           if(num[j] < num[i] && longest[i] < longest[j]+1)
+		   {
+              longest[i] = longest[j] + 1;
+		   }
+	   }
+   }
+   int max = 0;
+   /*********找到最大值*******/
+   for(i=0;i<length;i++)
+   {
+      if(max < longest[i])
+	  {
+         max = longest[i];
+	  }
+   }
+   delete [] longest;
+   return max;
+}
+int main()
+{
+	int num[] = {5, 6, 7, 1, 2, 8};
+	int length = 6;
+	int max = getMaxIncreaseChildListLength(num, length);
+	printf("最长递增子序列的长度为: %d\n", max);
+}

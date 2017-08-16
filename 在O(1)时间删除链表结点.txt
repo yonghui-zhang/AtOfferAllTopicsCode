@@ -1,0 +1,99 @@
+#include<stdio.h>
+#include<malloc.h>
+/***在O(1)时间删除链表结点**/
+typedef struct LNode{
+  int data;
+  struct LNode *next;
+}LNode, *LinkList;
+
+LinkList Head;
+LinkList p1;//前n-1个结点或头结点
+LinkList p2;//尾结点
+/*
+* 初始化链表
+*/
+void initLinkList()
+{
+   Head = (LinkList)malloc(sizeof(LNode));
+   Head->next = NULL;
+   /*****给链表赋值*****/
+   for(int i=0;i<5;i++)
+   {
+       LinkList p = (LinkList)malloc(sizeof(LNode));
+	   p->data = i;
+	   p->next = NULL;
+	   if(i == 2)
+	   {
+          p1 = p;//第三个结点
+	   }else if(i == 0){
+          p2 = p;//尾结点
+	   }
+	   p->next = Head->next;
+	   Head->next = p;
+   }
+}
+/*
+* 打印链表
+*/
+void printLinkList()
+{
+    LinkList p = Head->next;
+	while(p)
+	{
+       printf("%d ", p->data);
+	   p = p->next;
+	}
+	printf("\n");
+}
+/*
+*  删除某个结点
+*/
+void deleteLNode(LinkList deleteNode)
+{
+	if(!Head && !deleteNode)
+	{
+	   /**两个有一个不存在都得返回***/
+       return ;
+	}
+	
+    if(deleteNode->next != NULL)
+	{
+		if(deleteNode == Head)
+		{
+            printf("不能删除头结点!");
+			return ;
+		}
+		/*******前n-1个结点或头结点*****/
+		LinkList nextNode = deleteNode->next;//被删除的结点的下一个结点
+		deleteNode->data = nextNode->data;
+        deleteNode->next = nextNode->next;
+		delete nextNode;
+		nextNode = NULL;
+	}else if(deleteNode == Head)
+	{
+		 /**是头结点并且链表为空才允许删除头结点**/
+		delete deleteNode;
+		deleteNode = NULL;
+		Head = NULL;
+    
+	}else{
+      /********只剩尾结点了*******/
+       LinkList p = Head;
+	   while(p->next != deleteNode)
+	   {
+          p = p->next;
+	   }
+	   p->next = NULL;
+	   delete deleteNode;
+	   deleteNode = NULL;
+	}
+}
+int main()
+{
+  initLinkList();
+  printLinkList();
+  deleteLNode(p2);
+//  deleteLNode(p1);
+  printLinkList();
+
+}

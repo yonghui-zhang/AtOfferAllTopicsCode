@@ -1,0 +1,126 @@
+#include<stdio.h>
+#include<string.h>
+#include<wchar.h>
+#include<locale.h>
+/***第一个只出现一次的字符***/
+/*
+* 仅限26个小写字母
+*/
+char getFirstOnlyOnceShow(char str[])
+{
+	/****桶排序，空间换时间***/
+	int bucket[26];//共26个字母
+	int bucket2[26];//记录字母进桶的序号
+	/***初始化两个桶****/
+	for(int j=0;j<26;j++)
+	{
+		bucket[j] = 0;
+		bucket2[j] = 0;
+	}
+	/****向两个桶内丢数据******/
+    int length = strlen(str);
+	for(int i=0;i<length;i++)
+	{
+		bucket[str[i]-'a']++;
+		bucket2[str[i]-'a'] = i;
+	}
+	/****找到第一个只出现一次的字符****/
+	char ch;
+	int order = length - 1;
+	for(i=0;i<26;i++)
+	{
+		if(bucket[i] == 1 && order > bucket2[i])
+		{
+           ch = 'a' + i;
+		   order = bucket2[i];
+		}
+	}
+	return ch;
+}
+/*
+* 支持ASCII码256字符
+*/
+char getFirstOnlyOnceShow2(char str[])
+{
+	/****桶排序，空间换时间***/
+	int bucket[256];//共256个ASCII码
+	int bucket2[256];//记录字符进桶的序号
+	/***初始化两个桶****/
+	for(int j=0;j<256;j++)
+	{
+		bucket[j] = 0;
+		bucket2[j] = 0;
+	}
+	/****向两个桶内丢数据******/
+    int length = strlen(str);
+	for(int i=0;i<length;i++)
+	{
+		bucket[str[i]]++;
+		bucket2[str[i]] = i;
+	}
+	/****找到第一个只出现一次的字符****/
+	char ch;
+	int order = length - 1;
+	for(i=0;i<256;i++)
+	{
+		if(bucket[i] == 1 && order > bucket2[i])
+		{
+           ch = i;
+		   order = bucket2[i];
+		}
+	}
+	return ch;
+}
+/*
+* 支持Unicode中文(wchar_t宽字符)
+*/
+wchar_t getFirstOnlyOnceShow3(wchar_t str[])
+{
+	/****桶排序，空间换时间***/
+	int bucket[256*256];//共256*256个字符
+	int bucket2[256*256];//记录字母进桶的序号
+	/***初始化两个桶****/
+	for(int j=0;j<256*256;j++)
+	{
+		bucket[j] = 0;
+		bucket2[j] = 0;
+	}
+	/****向两个桶内丢数据******/
+    int length = wcslen(str);
+	for(int i=0;i<length;i++)
+	{
+		bucket[str[i]]++;
+		bucket2[str[i]] = i;
+	}
+	/****找到第一个只出现一次的字符****/
+	wchar_t ch;
+	int order = length - 1;
+	for(i=0;i<256*256;i++)
+	{
+		if(bucket[i] == 1 && order > bucket2[i])
+		{
+           ch = i;
+		   order = bucket2[i];
+		}
+	}
+	return ch;
+}
+int main()
+{
+	/******只支持26个小写字母**********/
+	char str[] = {"abaccdeff"};
+    char ch = getFirstOnlyOnceShow(str);
+	printf("字符串 %s 中第一次只出现一次的字符是: %c\n", str, ch);
+
+    /******支持256个ASCII码**********/
+	char str2[] = {"#A1aebaAcc1deff"};
+    char ch2 = getFirstOnlyOnceShow2(str2);
+	printf("字符串 %s 中第一次只出现一次的字符是: %c\n", str2, ch2);
+
+	/******支持256*256个Unicode字符****/
+	setlocale(LC_CTYPE, ""); /*设置为本地环境变量定义的locale*/  
+    
+	wchar_t str3[] = L"我爱中国我爱人8523aaTTTXX";
+    wchar_t ch3 = getFirstOnlyOnceShow3(str3);
+	wprintf(L"字符串 %ls 中第一次只出现一次的字符是: %c\n", str3, ch3);
+}

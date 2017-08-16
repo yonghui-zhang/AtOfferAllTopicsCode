@@ -1,0 +1,98 @@
+#include<stdio.h>
+/**顺时针打印矩阵**/
+#define ROWS 4
+#define COLS 4
+int matrix[4][4];
+/*
+* 初始化矩阵
+*/
+void initMatrix()
+{
+	for(int i=0;i<ROWS;i++)
+	{
+       for(int j=0;j<COLS;j++)
+	   {
+          matrix[i][j] = (j+1) + i*4;
+	   }
+	}
+}
+/*
+* 打印矩阵
+*/
+void printMatrix()
+{
+   for(int i=0;i<ROWS;i++)
+   {
+      for(int j=0;j<COLS;j++)
+	  {
+         printf("%d ",matrix[i][j]);
+	  }
+	  printf("\n");
+   }
+}
+/*
+* 顺时针打印矩阵
+*/
+void printMatrixClockwise()
+{
+	int row = 0;//当前行
+	int col = 0;//当前列
+
+	int rowStart = 0;//标记起始行
+	int rowEnd = ROWS - 1;//标记结尾行
+	int colStart = 0;//标记起始列
+	int colEnd = COLS - 1;//表示结尾列
+
+	int direction = 1;//默认向右，因为是顺时针
+	/*******顺时针打印矩阵************/
+	for(int i=0;i<ROWS*COLS;i++)
+	{
+	   printf("%d ", matrix[row][col]);
+	   switch(direction)
+	   {
+	     case 1: col++; break;//向右
+	     case 2: row++; break;//向下
+	     case 3: col--; break;//向左
+	     case 4: row--; break;//向上
+	   }
+	   /******控制拐弯*******/
+	   if(col > colEnd)//向右到头
+	   { 
+          col--;
+		  row++;
+		  rowStart++;
+		  direction = 2;
+	   }
+	   if(row > rowEnd)//向下到头
+	   {
+          row--;
+		  col--;
+		  colEnd--;
+		  direction = 3;
+	   }
+       if(col < colStart)//向左到头
+	   {
+          col++;
+	      row--;
+	      rowEnd--;
+		  direction = 4;
+	   }
+       if(row < rowStart)//向上到头
+	   {
+          row++;
+	      col++;
+		  colStart++;
+		  direction = 1;
+	   }
+	}
+}
+
+int main()
+{
+  initMatrix();
+  printMatrix();
+  printf("顺时针打印结果为: ");
+  printMatrixClockwise();
+  printf("\n");
+}
+
